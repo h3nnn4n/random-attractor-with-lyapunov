@@ -1,0 +1,6 @@
+This code ramdomly chooses parameters for a given equation and then tests if it is chaotic, stable, periodic, etc.
+If it is chaotic saves the information about the used parameters and the initial values to a text file and the attractor to a ppm file.
+
+Instructions of how to change the equations, parameters or initial conditions are in comments inside the code.
+
+Use it to whatever end you want. IF this makes you rich remember me (:
