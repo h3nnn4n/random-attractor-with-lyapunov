@@ -25,19 +25,19 @@ int main(){
 	char	fname[256];
 	FILE	*fptr;
 	
-	screenx=1600/2; // Resolution
-	screeny=1200/2;
+	screenx=1600/0.25; // Resolution
+	screeny=1200/0.25;
 	
 	//~ screenx=1024;
 	//~ screeny=768;
 	
-	iters=1000000;	// Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
+	iters=5000000;	// Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
 	images=1000000;	// Number of Images to be TESTED. THis inst how many will be generated, only how many will be tested.
 	sens=0.0075/1.0;// Here the brightness is defined. The bigger the number of iterations the small this value should be.
 	
-	//~ mode=1; /* Polynomial form */
+	mode=1; /* Polynomial form */
 	//~ mode=2; /* Absolute values */
-	mode=3; /* Exponential function */
+	//~ mode=3; /* Exponential function */
 	//~ mode=4; /* ??? */
 	//~ mode=5; /* ??? */
 	
@@ -47,23 +47,26 @@ int main(){
 	_color *image=malloc(screenx*screeny*sizeof(_color));
 	_color col;
 	
-	srand48(time(&secs));
-	srand(time(&secs));
+	//~ srand48(time(&secs));
+	//~ srand(time(&secs));
+	
+	srand48(666);
+	srand(666);
 	
 	for (n=0;n<images;n++) {
 		/* Initialize stuff */
 		for (i=0;i<6;i++) {					// Here the parameters are randomly initialized 
-			ax[i] = 4 * (drand48() - 0.5);	// -2.0 to 2.0 double precision
-			ay[i] = 4 * (drand48() - 0.5);
-			az[i] = 4 * (drand48() - 0.5);
+			//~ ax[i] = 4 * (drand48() - 0.5);	// -2.0 to 2.0 double precision
+			//~ ay[i] = 4 * (drand48() - 0.5);
+			//~ az[i] = 4 * (drand48() - 0.5);
 			
 			//~ ax[i] = 20 * (drand48())-4; 	// 0.0 to 16.0 double precision
 			//~ ay[i] = 20 * (drand48())-4;
 			//~ az[i] = 20 * (drand48())-4;
 			
-			//~ ax[i]=((rand()%26+1)-13)/10.0;	// -1.2 to 1.2 10e-1 precision
-			//~ ay[i]=((rand()%26+1)-13)/10.0;
-			//~ az[i]=((rand()%26+1)-13)/10.0;
+			ax[i]=((rand()%26+1)-13)/10.0;	// -1.2 to 1.2 10e-1 precision
+			ay[i]=((rand()%26+1)-13)/10.0;
+			az[i]=((rand()%26+1)-13)/10.0;
 		}
 		
 		lyapunov = 0;
@@ -96,14 +99,11 @@ int main(){
 		
 		for(i=1;i<iters;i++){
 			if(mode==1){  // Simple polynomial form
-				x[i]=	ax[0] + ax[1]  * x[i-1] + ax[2]*x[i-1] * x [i-1] + 
-						ax[3] * x [i-1]* y[i-1] + ax[4]*y[i-1] + ax[5]  * y[i-1]*y[i-1];
-				y[i]=	ay[0] + ay[1]  * x[i-1] + ay[2]*x[i-1] * x [i-1] + 
-						ay[3] * x [i-1]* y[i-1] + ay[4]*y[i-1] + ay[5]  * y[i-1]*y[i-1];
-				xenew=	ax[0] + ax[1]*xe + ax[2]*xe*xe +
-						ax[3]*xe*ye + ax[4]*ye + ax[5]*ye*ye;
-				yenew=	ay[0] + ay[1]*xe + ay[2]*xe*xe +
-						ay[3]*xe*ye + ay[4]*ye + ay[5]*ye*ye;
+				x[i]=	ax[0] + ax[1]  * x[i-1] + ax[2]*x[i-1] * x [i-1] + ax[3] * x [i-1]* y[i-1] + ax[4]*y[i-1] + ax[5]  * y[i-1]*y[i-1];
+				y[i]=	ay[0] + ay[1]  * x[i-1] + ay[2]*x[i-1] * x [i-1] + ay[3] * x [i-1]* y[i-1] + ay[4]*y[i-1] + ay[5]  * y[i-1]*y[i-1];
+				
+				xenew=	ax[0] + ax[1]*xe + ax[2]*xe*xe + ax[3]*xe*ye + ax[4]*ye + ax[5]*ye*ye;
+				yenew=	ay[0] + ay[1]*xe + ay[2]*xe*xe + ay[3]*xe*ye + ay[4]*ye + ay[5]*ye*ye;
 			}else if(mode==2){  // Absolute value
 				//~  // 3D version
 				//~ x[i]=	ax[0] + ax[1]*x[i-1] + ax[2]*y[i-1] + ax[3]*z[i-1] + ax[4]*ffabs(x[i-1]) + ax[5]*ffabs(y[i-1]) + ax[6]*ffabs(z[i-1]);
@@ -224,10 +224,10 @@ int main(){
 		/* Classify the series according to lyapunov */
 		if (drawit) {
 			if ((lyapunov) < 10) {
-				printf("neutrally stable\n");
+				//~ printf("neutrally stable\n");
 				drawit = FALSE;
 			} else if (lyapunov < 0) {
-				printf("periodic %g \n",lyapunov);
+				//~ printf("periodic %g \n",lyapunov);
 				drawit = FALSE; 
 			} else {
 				printf("img %d# is chaotic %g \n",n,lyapunov); 
@@ -279,6 +279,7 @@ int main(){
 						col.r=((1.0-exp(-sens*col.r))*255.0);
 						col.g=((1.0-exp(-sens*col.g))*255.0);
 						col.b=((1.0-exp(-sens*col.b))*255.0);
+						col=invert_color(col);
 						fprintf(fptr,"%d %d %d ",(int)col.r,(int)col.g,(int)col.b);
 					}
 					fputc('\n',fptr);
