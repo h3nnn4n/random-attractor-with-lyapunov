@@ -139,26 +139,27 @@ int main(){
 
         /* Classify the series according to lyapunov */
         if (drawit) {
-            if ((lyapunov) < 1000) {
+            if ((lyapunov) < -20) {
                 //printf("neutrally stable %f \n", lyapunov);
                 drawit = FALSE;
-            } else if (lyapunov < 0) {
+            } else if (lyapunov < 10) {
                 //printf("periodic %f \n", lyapunov);
                 drawit = FALSE;
             } else {
                 printf("img %d# is chaotic %f \n",n,lyapunov);
 
                 sprintf(fname,"%05d_%f.txt", n, lyapunov);
+
                 fptr = fopen(fname,"wb");
 
-                fprintf(fptr,"%g %g %g %g\n",xmin,ymin,xmax,ymax);
+                /*fprintf(fptr,"%g %g %g %g\n",xmin,ymin,xmax,ymax);*/
                 fwrite(&xmin,sizeof(double),1,fptr);
                 fwrite(&ymin,sizeof(double),1,fptr);
                 fwrite(&xmax,sizeof(double),1,fptr);
                 fwrite(&ymax,sizeof(double),1,fptr);
 
                 for (i=0;i<6;i++){
-                    fprintf(fptr,"%g %g\n",ax[i],ay[i]);
+                    /*fprintf(fptr,"%g %g\n",ax[i],ay[i]);*/
                     fwrite(&ax[i],sizeof(double),1,fptr);
                     fwrite(&ay[i],sizeof(double),1,fptr);
                 }
