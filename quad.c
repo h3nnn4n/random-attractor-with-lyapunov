@@ -140,11 +140,12 @@ int main(){
         /* Classify the series according to lyapunov */
         if (drawit) {
             if ((lyapunov) < -20) {
+            /*if ((lyapunov) < -20 || (lyapunov) > 20 ) {*/
+                drawit = FALSE;
                 //printf("neutrally stable %f \n", lyapunov);
-                drawit = FALSE;
             } else if (lyapunov < 10) {
-                //printf("periodic %f \n", lyapunov);
                 drawit = FALSE;
+                //printf("periodic %f \n", lyapunov);
             } else {
                 printf("img %d# is chaotic %f \n",n,lyapunov);
 

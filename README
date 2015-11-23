@@ -1,11 +1,11 @@
 This code ramdomly chooses parameters for a given equation and then tests if it is chaotic, stable, periodic, etc.
 If it is chaotic saves the information about the used parameters and the initial values to a text file and the attractor to a ppm file.
 
-There are two output files, one binary txt and one p3 netpbm file. 
+There are two output files, one binary txt and one p3 netpbm file.
 
 The binary txt file have the follow information in that specific order:
 xmin = the smallest value that x gets
-ymin = the smallest value that y gets	
+ymin = the smallest value that y gets
 xmax = the biggest value that x get
 ymax = the biggest value that y gets
 a1 = the twelve parameters that defines the attractor

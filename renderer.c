@@ -33,7 +33,7 @@ int main(int argc,char *argv[]){
     screenx = 1920/1; // Resolution
     screeny = 1080/1;
     iters   = 10000000;  // Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
-    images  = 100;
+    images  = 1000;
     sens    = 0.005/1.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
 
     double *x     = malloc(iters*sizeof(double));
@@ -83,9 +83,6 @@ int main(int argc,char *argv[]){
             image[i].b=0;
         }
 
-        sprintf(fname,"quad_%d_%d.ppm", k, time(NULL));
-
-        fptr = fopen(fname,"wt");
 
         for(i = 0;i<iters;i++){
             /* Calculate next term */
@@ -101,6 +98,11 @@ int main(int argc,char *argv[]){
         for (i = 0;i<iters;i++) {
             ix = (screenx*0.9) * (x[i] - xmin) / (xmax - xmin)+(screenx*0.05);
             iy = (screeny*0.9) * (y[i] - ymin) / (ymax - ymin)+(screeny*0.05);
+
+            if ( ix < 0 || ix > screenx || iy < 0 || iy > screeny ){
+                continue;
+            }
+
             if (i > 100){
                 image[iy*screenx+ix].r += sin(ix*M_PI/360)+2.0;
                 image[iy*screenx+ix].g += cos(iy*M_PI/270)+2.0;
@@ -108,6 +110,8 @@ int main(int argc,char *argv[]){
             }
         }
 
+        sprintf(fname,"quad_%d.ppm", k);
+        fptr = fopen(fname,"wt");
         fprintf(fptr, "P3\n%d %d\n255\n", screenx, screeny);
 
         for(i = 0;i<screeny;i++){
@@ -123,13 +127,28 @@ int main(int argc,char *argv[]){
         }
         fclose(fptr);
 
-        sprintf(tmp, "convert %s quad_%d.png", fname, time(NULL));
+        sprintf(tmp, "convert %s quad_%d.png", fname, k);
 
         system(tmp);
 
         sprintf(tmp,"rm %s",fname);
 
         system(tmp);
+
+        sprintf(fname,"quad_%d.txt", k);
+
+        fptr = fopen(fname,"wb");
+
+        fwrite(&xmin,sizeof(double),1,fptr);
+        fwrite(&ymin,sizeof(double),1,fptr);
+        fwrite(&xmax,sizeof(double),1,fptr);
+        fwrite(&ymax,sizeof(double),1,fptr);
+
+        for (i=0;i<6;i++){
+            fwrite(&ax[i],sizeof(double),1,fptr);
+            fwrite(&ay[i],sizeof(double),1,fptr);
+        }
+        fclose(fptr);
 
         printf("Done!\n");
     }

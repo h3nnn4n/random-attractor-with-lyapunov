@@ -35,7 +35,7 @@ int main(int argc,char *argv[]){
     screenx = 1920/1; // Resolution
     screeny = 1080/1;
     iters   = 10000000;  // Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
-    images  = 100;
+    images  = 25;
     sens    = 0.005/1.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
 
     double *x     = malloc(iters*sizeof(double));
@@ -52,12 +52,9 @@ int main(int argc,char *argv[]){
     xmax = -1000.0;
     ymax = -1000.0;
 
-    for ( iframes = 0 ; iframes < 3 ; iframes++) {
+    for ( iframes = 0 ; iframes < argc-1 ; iframes++) {
         fptr = fopen(argv[iframes+1], "rb");
-        double xmin2, ymin2, xmax2, ymax2;
-
-        fread(&xmin2, sizeof( double ), 1, fptr);
-        fread(&ymin2, sizeof( double ), 1, fptr);
+        double xmin2, ymin2, xmax2, ymax2; fread(&xmin2, sizeof( double ), 1, fptr); fread(&ymin2, sizeof( double ), 1, fptr);
         fread(&xmax2, sizeof( double ), 1, fptr);
         fread(&ymax2, sizeof( double ), 1, fptr);
 
@@ -69,10 +66,16 @@ int main(int argc,char *argv[]){
         fclose(fptr);
     }
 
-    for ( iframes = 0 ; iframes < 3 ; iframes++) {
+    for ( iframes = 0 ; iframes < argc-1 ; iframes++) {
+        int first   =  iframes + 1;
+        int second  = (iframes + 2) % argc;
+        second = second == 0 ? second + 1 : second;
+
+        /*printf("%d %d\n", first, second);*/
+
         double dump;
 
-        fptr = fopen(argv[iframes+1], "rb");
+        fptr = fopen(argv[first], "rb");
 
         fread(&dump, sizeof( double ), 1, fptr);
         fread(&dump, sizeof( double ), 1, fptr);
@@ -86,7 +89,7 @@ int main(int argc,char *argv[]){
 
         fclose(fptr);
 
-        fptr = fopen(argv[(iframes+2) % 3], "rb");
+        fptr = fopen(argv[second], "rb");
 
         fread(&dump, sizeof( double ), 1, fptr);
         fread(&dump, sizeof( double ), 1, fptr);
@@ -103,11 +106,11 @@ int main(int argc,char *argv[]){
         for ( k = 0 ; k < images ; k++ ) {
             memset( image, 0, screenx*screeny*sizeof(_color));
 
-            puts("----------");
+            /*puts("----------");*/
             for ( i = 0 ; i < 6 ; i++ ){
                 ax[i] = ax1[i] + ((double)k/images) * (ax2[i] - ax1[i]);
                 ay[i] = ay1[i] + ((double)k/images) * (ay2[i] - ay1[i]);
-                printf("%f \t%f\n", ax[i], ay[i]);
+                /*printf("%f \t%f\n", ax[i], ay[i]);*/
             }
 
             for (i=0;i<screenx*screeny;i++) {
@@ -137,7 +140,7 @@ int main(int argc,char *argv[]){
                 }
             }
 
-            sprintf(fname,"quad_%d.ppm", iframes * k);
+            sprintf(fname,"anim_%05d.ppm", iframes * images + k);
             fptr = fopen(fname,"wt");
             fprintf(fptr, "P3\n%d %d\n255\n", screenx, screeny);
 
@@ -154,7 +157,7 @@ int main(int argc,char *argv[]){
             }
             fclose(fptr);
 
-            sprintf(tmp, "convert %s quad_%d.png", fname, time(NULL));
+            sprintf(tmp, "convert %s animer_%05d.png", fname,  iframes * images + k);
 
             system(tmp);
 
@@ -162,9 +165,12 @@ int main(int argc,char *argv[]){
 
             system(tmp);
 
-            printf("Done!\n");
+            printf("\r%.3f%%", ((double)(iframes * images + k)/((argc-1)*images))*100.0);
+            fflush(stdout);
         }
     }
+
+    printf("Done!\n");
 
     return EXIT_SUCCESS;
 }
