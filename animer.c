@@ -32,11 +32,11 @@ int main(int argc,char *argv[]){
     srand48(time(&secs));
     srand  (time(&secs));
 
-    screenx = 1920/2; // Resolution
-    screeny = 1080/2;
+    screenx = 1920/1; // Resolution
+    screeny = 1080/1;
     iters   = 10000000;  // Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
-    images  = 10000;
-    sens    = 0.005/2.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
+    images  = 5000;
+    sens    = 0.005/1.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
 
     double *x     = malloc(iters*sizeof(double));
     double *y     = malloc(iters*sizeof(double));
