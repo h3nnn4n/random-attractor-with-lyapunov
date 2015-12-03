@@ -1,9 +1,8 @@
 #!/bin/bash
 
-gcc -Ofast -free -m64 -mtune=native -mfpmath=sse -msse4.2 -lm quad.c color.c -lpng -o quad
+make
 
-sleep 1 && ./quad & disown %
-sleep 3 && ./quad & disown %
-sleep 5 && ./quad & disown %
-sleep 7 && ./quad & disown %
-
+sleep 1 && ./spitter & disown %
+sleep 3 && ./spitter & disown %
+sleep 5 && ./spitter & disown %
+sleep 7 && ./spitter & disown %
