@@ -33,9 +33,9 @@ int main(int argc,char *argv[]){
 
     screenx = 1920/1; // Resolution
     screeny = 1080/1;
-    iters   = 10000000;  // Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
-    images  = 5000;
-    sens    = 0.005/1.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
+    iters   = 1000000;  // Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
+    images  = 500;
+    sens    = 0.001/2.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
 
     double *x     = malloc(iters*sizeof(double));
     double *y     = malloc(iters*sizeof(double));
@@ -138,9 +138,9 @@ int main(int argc,char *argv[]){
 
 
             /*printf("\r%.3f%% ETA: %f", ((double)(iframes * images + k)/((argc-1)*images))*100.0, (((clock()-timer)/CLOCKS_PER_SEC) * (images*(argc-1)) / (iframes * images + k)));*/
-            printf("\r%.3f%% Time: %f   \t ETA: %f", ((double)(iframes * images + k)/((argc-1)*images))*100.0,
+            printf("\r%.3f%% Time: %f   \t ETA: %f", ((double)(iframes * images + (k+1))/((argc-1)*images))*100.0,
                                                      (((double)(clock()-timer)/CLOCKS_PER_SEC)),
-                                                     (((((double)(clock()-timer)/CLOCKS_PER_SEC)) * (images*(argc-1)) ) / (iframes * images + k)) - (((double)(clock()-timer)/CLOCKS_PER_SEC))
+                                                     (((((double)(clock()-timer)/CLOCKS_PER_SEC)) * (images*(argc-1)) ) / (iframes * images + (k+1))) - (((double)(clock()-timer)/CLOCKS_PER_SEC))
                   );
             /*printf("\r%.3f%% ETA: %f", ((double)(iframes * images + k)/((argc-1)*images))*100.0, 0);*/
             fflush(stdout);
