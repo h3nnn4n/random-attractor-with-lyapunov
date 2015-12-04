@@ -1,15 +1,19 @@
+CC=gcc
+FLAGS=$(CFLAGS) -Ofast -free -m64 -mtune=native -mfpmath=sse -msse4.2 -lm -lpng -g
 
+.PHONY: clean
 
-all: spitter
-
+all: clean quad
 
 quad:
-	gcc -Ofast -free -m64 -mtune=native -mfpmath=sse -msse4.2 -lm quad.c color.c -lpng -o quad
-
+	$(CC) $(FLAGS) quad.c color.c      -o quad
 
 spitter:
-	gcc -Ofast -free -m64 -mtune=native -mfpmath=sse -msse4.2 -lm spitter.c color.c -lpng -o spitter
+	$(CC) $(FLAGS) spitter.c color.c   -o spitter
 
 animer:
-	gcc -Ofast -free -m64 -mtune=native -mfpmath=sse -msse4.2 -lm color.c renderer.c -lpng -o renderer
-	gcc -Ofast -free -m64 -mtune=native -mfpmath=sse -msse4.2 -lm color.c animer.c -lpng -o animer
+	$(CC) $(FLAGS) color.c renderer.c  -o renderer
+	$(CC) $(FLAGS) color.c animer.c    -o animer
+
+clean:
+	-@rm quad renderer animer spitter quad 2> /dev/null || true
