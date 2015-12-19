@@ -3,7 +3,10 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+
 #include "color.h"
+
+#include "equations.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -13,12 +16,12 @@
 int main(int argc,char *argv[]){
     if ( argc <= 3 ) { printf("I need at least 3 files to work with\n"); return EXIT_FAILURE; }
 
-    int 	i, j, k, iframes, n, ix, iy,
+    int         i, j, k, iframes, n, ix, iy,
                 iters, images, frames,
                 screenx, screeny,
                 drawit;
-    long	secs;
-    double	xmin=1e32, xmax=-1e32, ymin=1e32, ymax=-1e32,
+    long        secs;
+    double      xmin=1e32, xmax=-1e32, ymin=1e32, ymax=-1e32,
                 ax [6], ay [6],
                 ax1[6], ay1[6],
                 ax2[6], ay2[6],
@@ -27,16 +30,16 @@ int main(int argc,char *argv[]){
                 d0, dd, dx, dy, lyapunov,
                 xe, ye, xenew, yenew;
     char        fname[256], tmp[256];
-    FILE	*fptr;
+    FILE        *fptr;
 
     srand48(time(&secs));
     srand  (time(&secs));
 
-    screenx = 1920/1; // Resolution
+    screenx = 1920/1;
     screeny = 1080/1;
-    iters   = 10000000;  // Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
+    iters   = 10000000;
     images  = 5000;
-    sens    = 0.005/1.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
+    sens    = 0.005/1.0;
 
     double *x     = malloc(iters*sizeof(double));
     double *y     = malloc(iters*sizeof(double));
@@ -73,8 +76,6 @@ int main(int argc,char *argv[]){
         int second  = (iframes + 2) % argc;
         second = second == 0 ? second + 1 : second;
 
-        /*printf("%d %d\n", first, second);*/
-
         double dump;
 
         fptr = fopen(argv[first], "rb");
@@ -108,11 +109,9 @@ int main(int argc,char *argv[]){
         for ( k = 0 ; k < images ; k++ ) {
             memset( image, 0, screenx*screeny*sizeof(_color));
 
-            /*puts("----------");*/
             for ( i = 0 ; i < 6 ; i++ ){
                 ax[i] = ax1[i] + ((double)k/images) * (ax2[i] - ax1[i]);
                 ay[i] = ay1[i] + ((double)k/images) * (ay2[i] - ay1[i]);
-                /*printf("%f \t%f\n", ax[i], ay[i]);*/
             }
 
             for (i=0;i<screenx*screeny;i++) {
@@ -122,9 +121,8 @@ int main(int argc,char *argv[]){
             }
 
             for(i = 0;i<iters;i++){
-                /* Calculate next term */
-                x[i]   = ax[0] + ax[1]*x[i-1] + ax[2]*x[i-1]*x[i-1] + ax[3]*x[i-1]*y[i-1] + ax[4]*y[i-1] + ax[5]*y[i-1]*y[i-1];
-                y[i]   = ay[0] + ay[1]*x[i-1] + ay[2]*x[i-1]*x[i-1] + ay[3]*x[i-1]*y[i-1] + ay[4]*y[i-1] + ay[5]*y[i-1]*y[i-1];
+                __x_equations
+                __y_equations
 
                 xmin = MIN(xmin, x[i]);
                 ymin = MIN(ymin, y[i]);
@@ -167,12 +165,10 @@ int main(int argc,char *argv[]){
 
             system(tmp);
 
-            /*printf("\r%.3f%% ETA: %f", ((double)(iframes * images + k)/((argc-1)*images))*100.0, (((clock()-timer)/CLOCKS_PER_SEC) * (images*(argc-1)) / (iframes * images + k)));*/
             printf("\r%.3f%% Time: %f   \t ETA: %f", ((double)(iframes * images + k)/((argc-1)*images))*100.0,
                                                      (((double)(clock()-timer)/CLOCKS_PER_SEC)),
                                                      (((((double)(clock()-timer)/CLOCKS_PER_SEC)) * (images*(argc-1)) ) / (iframes * images + k)) - (((double)(clock()-timer)/CLOCKS_PER_SEC))
                   );
-            /*printf("\r%.3f%% ETA: %f", ((double)(iframes * images + k)/((argc-1)*images))*100.0, 0);*/
             fflush(stdout);
         }
     }
