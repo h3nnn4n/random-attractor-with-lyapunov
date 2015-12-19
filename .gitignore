@@ -2,6 +2,7 @@
 *.mp4
 *.ppm
 *.png
+*.txt
 testes
 samples*
 quad
