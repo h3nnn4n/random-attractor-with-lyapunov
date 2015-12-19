@@ -1,7 +1,7 @@
 #ifndef   __equations
 #define   __equations
 
-
+#define NPARAMS 13
 
 #define   __x_equations        x[i] = ax[0] + ax[1]*x[i-1]                 + ax[ 2]*x[i-1]*y[i-1]                  + ax[ 3]*x[i-1]*y[i-1]*y[i-1]                  + ax[ 4]*x[i-1]*y[i-1]*y[i-1]*y[i-1]                  + \
                                               ax[5]*x[i-1]*x[i-1]          + ax[ 6]*x[i-1]*x[i-1]*y[i-1]           + ax[ 7]*x[i-1]*x[i-1]*y[i-1]*y[i-1]           + ax[ 8]*x[i-1]*x[i-1]*y[i-1]*y[i-1]*y[i-1]           + \

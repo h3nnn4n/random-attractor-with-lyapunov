@@ -1,1 +1,1 @@
-equations/2degree_xy.h
+equations/3degree_xy.h

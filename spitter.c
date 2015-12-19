@@ -20,7 +20,7 @@ int main(){
                   drawit;
     unsigned long images,secs;
     double        xmin=1e32,xmax=-1e32,ymin=1e32,ymax=-1e32,zmin=1e32,zmax=-1e32,
-                  ax[12],ay[12],
+                  ax[NPARAMS],ay[NPARAMS],
                   sens,
                   d0,dd,dx,dy,lyapunov,
                   xe,ye,ze,xenew,yenew,zenew;
@@ -46,7 +46,7 @@ int main(){
     for (n = 0 ; n<images ; n++) {
         //fprintf(stderr, ".");
         /* Initialize stuff */
-        for (i=0 ; i<6 ; i++) {					// Here the parameters are randomly initialized
+        for (i=0 ; i<NPARAMS ; i++) {					// Here the parameters are randomly initialized
             //ax[i] = 4 * (drand48() - 0.5);	// -2.0 to 2.0 double precision
             //ay[i] = 4 * (drand48() - 0.5);
 
@@ -161,7 +161,7 @@ int main(){
                 fwrite(&xmax,sizeof(double),1,fptr);
                 fwrite(&ymax,sizeof(double),1,fptr);
 
-                for (i=0;i<6;i++){
+                for (i=0;i<NPARAMS;i++){
                     /*fprintf(fptr,"%g %g\n",ax[i],ay[i]);*/
                     fwrite(&ax[i],sizeof(double),1,fptr);
                     fwrite(&ay[i],sizeof(double),1,fptr);

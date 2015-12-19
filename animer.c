@@ -22,9 +22,9 @@ int main(int argc,char *argv[]){
                 drawit;
     long        secs;
     double      xmin=1e32, xmax=-1e32, ymin=1e32, ymax=-1e32,
-                ax [6], ay [6],
-                ax1[6], ay1[6],
-                ax2[6], ay2[6],
+                ax [NPARAMS], ay [NPARAMS],
+                ax1[NPARAMS], ay1[NPARAMS],
+                ax2[NPARAMS], ay2[NPARAMS],
                 sens,
                 t1, t2,
                 d0, dd, dx, dy, lyapunov,
@@ -85,7 +85,7 @@ int main(int argc,char *argv[]){
         fread(&dump, sizeof( double ), 1, fptr);
         fread(&dump, sizeof( double ), 1, fptr);
 
-        for ( i = 0 ; i < 6 ; i++ ){
+        for ( i = 0 ; i < NPARAMS ; i++ ){
             fread(&ax1[i], sizeof( double ), 1, fptr);
             fread(&ay1[i], sizeof( double ), 1, fptr);
         }
@@ -99,7 +99,7 @@ int main(int argc,char *argv[]){
         fread(&dump, sizeof( double ), 1, fptr);
         fread(&dump, sizeof( double ), 1, fptr);
 
-        for ( i = 0 ; i < 6 ; i++ ){
+        for ( i = 0 ; i < NPARAMS ; i++ ){
             fread(&ax2[i], sizeof( double ), 1, fptr);
             fread(&ay2[i], sizeof( double ), 1, fptr);
         }
@@ -109,7 +109,7 @@ int main(int argc,char *argv[]){
         for ( k = 0 ; k < images ; k++ ) {
             memset( image, 0, screenx*screeny*sizeof(_color));
 
-            for ( i = 0 ; i < 6 ; i++ ){
+            for ( i = 0 ; i < NPARAMS ; i++ ){
                 ax[i] = ax1[i] + ((double)k/images) * (ax2[i] - ax1[i]);
                 ay[i] = ay1[i] + ((double)k/images) * (ay2[i] - ay1[i]);
             }
