@@ -4,7 +4,9 @@
 *.png
 *.txt
 testes
+core
 samples*
 quad
 animer
 spitter
+renderer
