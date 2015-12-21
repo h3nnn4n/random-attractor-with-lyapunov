@@ -31,7 +31,7 @@ int main(){
     screeny = 1080/1;
 
     iters   = 10000000;  // Maximum number of iterations in EACH image, If the attractors goes to infinity or to zero a new set will be started.
-    images  = 1000000;   // Number of Images to be TESTED. THis inst how many will be generated, only how many will be tested.
+    images  = 1000;      // Number of Images to be TESTED. THis inst how many will be generated, only how many will be tested.
     sens    = 0.005/1.0; // Here the brightness is defined. The bigger the number of iterations the small this value should be.
 
     double *x     = (double*) malloc(sizeof(double) * iters            );
@@ -43,18 +43,18 @@ int main(){
     srand48(time(&secs));
     srand  (time(&secs));
 
-    for (n = 0 ; n<images ; n++) {
+    for (n = 0 ; n < images ; ) {
         //fprintf(stderr, ".");
         /* Initialize stuff */
         for (i=0 ; i<NPARAMS ; i++) {					// Here the parameters are randomly initialized
-            //ax[i] = 4 * (drand48() - 0.5);	// -2.0 to 2.0 double precision
-            //ay[i] = 4 * (drand48() - 0.5);
+            ax[i] = 2.0 * (drand48() - 0.5) * 2.0;	// -2.0 to 2.0 double precision
+            ay[i] = 2.0 * (drand48() - 0.5) * 2.0;
 
             //ax[i] = 20 * (drand48())-4; 	// 0.0 to 16.0 double precision
             //ay[i] = 20 * (drand48())-4;
 
-            ax[i] = ((rand()%26 + 1) - 13) / 10.0;	// -1.2 to 1.2 10e-1 precision
-            ay[i] = ((rand()%26 + 1) - 13) / 10.0;
+            /*ax[i] = ((rand()%26 + 1) - 13) / 10.0;	// -1.2 to 1.2 10e-1 precision*/
+            /*ay[i] = ((rand()%26 + 1) - 13) / 10.0;*/
         }
 
         lyapunov = 0;
@@ -96,8 +96,8 @@ int main(){
             __y_equations_lyaps
 
 #ifdef __debug
-            printf("---------\n");
-            printf("%f %f\n", x[i], y[i]);
+            /*printf("---------\n");*/
+            printf("%f %f ", x[i], y[i]);
             printf("%f %f\n", xenew, yenew);
 #endif
 
@@ -110,7 +110,7 @@ int main(){
             /* Check if the series tend to infinity */
             if (xmin < -1e7 || ymin < -1e7 || xmax > 1e7 || ymax > 1e7 || isnan(x[i]) || isnan(y[i] || isnan(xenew) || isnan(yenew))) {
                 drawit = FALSE;
-                //printf("infinite attractor\n");
+                /*printf("infinite attractor\n");*/
                 break;
             }
 
@@ -118,9 +118,9 @@ int main(){
             dx = x[i] - x[i-1];
             dy = y[i] - y[i-1];
 
-            if (abs(dx) < 1e-6 && abs(dy) < 1e-6) {
+            if (abs(dx) < 1e-7 && abs(dy) < 1e-7) {
                 drawit = FALSE;
-                //printf("point attractor\n");
+                /*printf("point attractor\n");*/
                 break;
             }
 
@@ -149,20 +149,20 @@ int main(){
                 drawit = FALSE;
                 //printf("periodic %f \n", lyapunov);
             } else {
+                n++;
+
                 printf("img %d# is chaotic %f \n",n,lyapunov);
 
                 sprintf(fname,"%05d_%f.txt", n, lyapunov);
 
                 fptr = fopen(fname,"wb");
 
-                /*fprintf(fptr,"%g %g %g %g\n",xmin,ymin,xmax,ymax);*/
                 fwrite(&xmin,sizeof(double),1,fptr);
                 fwrite(&ymin,sizeof(double),1,fptr);
                 fwrite(&xmax,sizeof(double),1,fptr);
                 fwrite(&ymax,sizeof(double),1,fptr);
 
                 for (i=0;i<NPARAMS;i++){
-                    /*fprintf(fptr,"%g %g\n",ax[i],ay[i]);*/
                     fwrite(&ax[i],sizeof(double),1,fptr);
                     fwrite(&ay[i],sizeof(double),1,fptr);
                 }
@@ -174,24 +174,18 @@ int main(){
                     image[i].b=0;
                 }
 
-                sprintf(fname,"%05d.ppm",n); // Here the attractor is draw
-                fptr = fopen(fname,"wt");
+                sprintf(fname, "w_%05d_%f.png", n, lyapunov);
 
                 for (i=0;i<iters;i++) {
                     ix = (screenx*0.90) * (x[i] - xmin) / (xmax - xmin)+(screenx*0.05);
                     iy = (screeny*0.90) * (y[i] - ymin) / (ymax - ymin)+(screeny*0.05);
-                    if (i > 100){
-                        //~ image[iy*screenx+ix].r+=1; // Density plot
-                        //~ image[iy*screenx+ix].g+=1;
-                        //~ image[iy*screenx+ix].b+=1;
 
-                        image[iy*screenx+ix].r+=sin(ix*M_PI/360)+2.0; // Kind of a density plot // This is something about colors
-                        image[iy*screenx+ix].g+=cos(iy*M_PI/270)+2.0;
-                        image[iy*screenx+ix].b+=sin(iy*M_PI/360)+2.0;
+                    if (i > 100){
+                        image[iy*screenx+ix].r += sin(ix*M_PI/360) + 2.0;
+                        image[iy*screenx+ix].g += cos(iy*M_PI/270) + 2.0;
+                        image[iy*screenx+ix].b += sin(iy*M_PI/360) + 2.0;
                     }
                 }
-
-                fprintf(fptr,"P3\n%d %d\n255\n",screenx,screeny);
 
                 for(i = 0;i<screeny;i++){
                     for(j = 0;j<screenx;j++){
@@ -200,19 +194,11 @@ int main(){
                         col.g = ((1.0 - exp(-sens * col.g)) * 255.0);
                         col.b = ((1.0 - exp(-sens * col.b)) * 255.0);
                         col   = invert_color(col);
-                        fprintf(fptr,"%d %d %d ",(int)col.r,(int)col.g,(int)col.b);
+                        image[i*screenx+j] = col;
                     }
-                    fputc('\n',fptr);
                 }
-                fclose(fptr);
 
-                sprintf(tmp, "convert %s w_%05d_%f.png", fname, n, lyapunov);
-
-                system(tmp);
-
-                sprintf(tmp,"rm %s",fname);
-
-                system(tmp);
+                save_png_to_file(image, screenx, screeny, fname);
             }
         }
     }

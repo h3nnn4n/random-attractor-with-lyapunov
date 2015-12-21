@@ -57,7 +57,9 @@ int main(int argc,char *argv[]){
 
     for ( iframes = 0 ; iframes < argc-1 ; iframes++) {
         fptr = fopen(argv[iframes+1], "rb");
-        double xmin2, ymin2, xmax2, ymax2; fread(&xmin2, sizeof( double ), 1, fptr); fread(&ymin2, sizeof( double ), 1, fptr);
+        double xmin2, ymin2, xmax2, ymax2;
+        fread(&xmin2, sizeof( double ), 1, fptr);
+        fread(&ymin2, sizeof( double ), 1, fptr);
         fread(&xmax2, sizeof( double ), 1, fptr);
         fread(&ymax2, sizeof( double ), 1, fptr);
 
@@ -144,22 +146,23 @@ int main(int argc,char *argv[]){
         }
     }
 
-    sprintf(fname,"supreme.ppm");
-    fptr = fopen(fname,"wt");
-    fprintf(fptr, "P3\n%d %d\n255\n", screenx, screeny);
+    sprintf(fname,"supreme.png");
 
-    for(i = 0;i<screeny;i++){
-        for(j = 0;j<screenx;j++){
-            col   = image[i*screenx+j];
-            col.r = ((1.0 - exp(-sens * col.r)) * 255.0);
-            col.g = ((1.0 - exp(-sens * col.g)) * 255.0);
-            col.b = ((1.0 - exp(-sens * col.b)) * 255.0);
-            col   = invert_color(col);
-            fprintf(fptr,"%d %d %d ",(int)col.r,(int)col.g,(int)col.b);
+    for(i = 0 ; i<screeny ; i++){
+        for(j = 0 ; j<screenx ; j++){
+            col                = image[i*screenx+j];
+
+            col.r              = ((1.0 - exp(-sens * col.r)) * 255.0);
+            col.g              = ((1.0 - exp(-sens * col.g)) * 255.0);
+            col.b              = ((1.0 - exp(-sens * col.b)) * 255.0);
+
+            col                = invert_color(col);
+
+            image[i*screenx+j] = col;
         }
-        fputc('\n',fptr);
     }
-    fclose(fptr);
+
+    save_png_to_file(image, screenx, screeny, fname);
 
     printf("\nDone!\n");
 
