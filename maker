@@ -1,7 +1,5 @@
 #!/bin/bash
 
-make
-
 sleep 1 && ./spitter & disown %
 sleep 3 && ./spitter & disown %
 sleep 5 && ./spitter & disown %
