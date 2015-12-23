@@ -24,6 +24,7 @@ _color getHue(double h);
 _color getGrad2(double p);
 _color getPal(double p);
 
+_color invert_color_norm(_color col);
 _color invert_color(_color col);
 
 #endif /* __cliff_color */

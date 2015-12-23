@@ -12,7 +12,8 @@ void populatePal(_color *pallete){
     _color col;
     int size,i,r,g,b;
     char limbo[256];
-    FILE *pal=fopen("pals/ultimate_feel.ppm","rt");
+    FILE *pal=fopen("pals/sand.ppm","rt");
+
     if(pal==NULL){
         printf("ohshishishishish\n");
         exit(1);
@@ -143,10 +144,17 @@ _color getPal(double p){	 // Get the colors from a file. Slow enough that make s
     return col;
 }
 
+_color invert_color_norm(_color col){	 // Invert the colors.
+    col.r = 1.0 - col.r;
+    col.g = 1.0 - col.g;
+    col.b = 1.0 - col.b;
+    return col;
+}
+
 _color invert_color(_color col){	 // Invert the colors.
-    col.r=255-col.r;
-    col.g=255-col.g;
-    col.b=255-col.b;
+    col.r = 255 - col.r;
+    col.g = 255 - col.g;
+    col.b = 255 - col.b;
     return col;
 }
 
