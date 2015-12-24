@@ -12,27 +12,27 @@ void populatePal(_color *pallete){
     _color col;
     int size,i,r,g,b;
     char limbo[256];
-    FILE *pal=fopen("pals/sand.ppm","rt");
+    FILE *pal=fopen("pals/sunrise.ppm","rt");
 
     if(pal==NULL){
         printf("ohshishishishish\n");
         exit(1);
     }
 
-    fgets(limbo,255,pal);
-    fgets(limbo,255,pal);
-    fgets(limbo,255,pal);
+    fgets(limbo, 255, pal);
+    fgets(limbo, 255, pal);
+    fgets(limbo, 255, pal);
 
-    fscanf(pal,"%d\n",&size);
-    size=255;
+    fscanf(pal, "%d\n", &size);
+    size = 255;
 
-    if(size>0 && pal!=NULL){
-        for(i=0;i<size;i++){
-            fscanf(pal,"%d%d%d\n",&r,&g,&b);
-            col.r=(double)r;
-            col.g=(double)g;
-            col.b=(double)b;
-            memcpy(&pallete[i],&col,sizeof(_color));
+    if ( size > 0 && pal != NULL ){
+        for(i = 0 ; i < size ; i++ ){
+            fscanf(pal, "%d%d%d\n", &r, &g, &b);
+            col.r = (double)r;
+            col.g = (double)g;
+            col.b = (double)b;
+            memcpy(&pallete[i], &col,  sizeof(_color));
         }
     }
     fclose(pal);
@@ -42,6 +42,11 @@ _color getPalMem(double p,_color *pal){
     int size=255;
     _color col;
     memcpy(&col,&pal[(int)((p*size)+0.5)],sizeof(_color));
+
+    col.r = col.r / 255.0;
+    col.g = col.g / 255.0;
+    col.b = col.b / 255.0;
+
     return col;
 }
 
@@ -118,27 +123,27 @@ _color getPal(double p){	 // Get the colors from a file. Slow enough that make s
     _color col;
     int size,i,r,g,b;
     char lal[256];
-    FILE *pal=fopen("pals/sunrise.ppm", "rt");
+    FILE *pal = fopen("pals/sunrise.ppm", "rt");
 
-    fgets(lal,255,pal);
-    fgets(lal,255,pal);
-    fgets(lal,255,pal);
+    fgets(lal, 255, pal);
+    fgets(lal, 255, pal);
+    fgets(lal, 255, pal);
 
     fscanf(pal,"%d\n",&size);
 
-    p=p*size;
+    p = p * size;
 
-    if(p>0){
-        for(i=0;i<p;i++){
-            fscanf(pal,"%d\n%d\n%d\n",&r,&g,&b);
+    if (p > 0){
+        for ( i = 0 ; i > p ; i++ ){
+            fscanf(pal, "%d\n%d\n%d\n", &r, &g, &b);
         }
-    }else{
-        fscanf(pal,"%d\n%d\n%d\n",&r,&g,&b);
+    } else {
+        fscanf(pal, "%d\n%d\n%d\n", &r, &g, &b);
     }
 
-    col.r=r/255.0;
-    col.g=g/255.0;
-    col.b=b/255.0;
+    col.r = col.r / 255.0;
+    col.g = col.g / 255.0;
+    col.b = col.b / 255.0;
 
     fclose(pal);
     return col;

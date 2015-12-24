@@ -41,10 +41,13 @@ int main(int argc,char *argv[]){
     images  = 500;
     sens    = 0.001/2.0;
 
-    double *x     = malloc(iters*sizeof(double));
-    double *y     = malloc(iters*sizeof(double));
-    _color *image = malloc(screenx*screeny*sizeof(_color));
+    double *x     = malloc ( iters * sizeof(double));
+    double *y     = malloc ( iters * sizeof(double));
+    _color *image = malloc ( screenx * screeny * sizeof(_color));
+    _color *pal   = malloc ( sizeof(_color) * 255) ;
     _color col;
+
+    populatePal(pal);
 
     if(image==NULL){
         printf("Output error!\n");
@@ -126,7 +129,8 @@ int main(int argc,char *argv[]){
                 ymax = MAX(ymax, y[i]);
             }
 
-            _color col = getPal(p);
+            _color col = getPalMem(p, pal);
+            /*_color col = getPal(p);*/
 
             for (i = 0;i<iters;i++) {
                 ix = (screenx*0.9) * (x[i] - xmin) / (xmax - xmin)+(screenx*0.05);
