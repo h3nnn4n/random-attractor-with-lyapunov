@@ -108,7 +108,7 @@ int main(){
             ymax = MAX(ymax, y[i]);
 
             /* Check if the series tend to infinity */
-            if (xmin < -1e7 || ymin < -1e7 || xmax > 1e7 || ymax > 1e7 || isnan(x[i]) || isnan(y[i] || isnan(xenew) || isnan(yenew))) {
+            if (xmin < -1e7 || ymin < -1e7 || xmax > 1e7 || ymax > 1e7 || isnan(x[i]) || isnan(y[i]) || isnan(xenew) || isnan(yenew)) {
                 drawit = FALSE;
                 /*printf("infinite attractor\n");*/
                 break;
